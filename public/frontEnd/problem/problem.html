@@ -1,0 +1,103 @@
+<div class="container-fluid">
+	<div class="row animated fadeIn">
+		<div class="well well-sm pull-left col-md-1">
+			<center>
+				<div class="glyphicon glyphicon-menu-up" role="button" ng-click="vm.toggleVote(vm.problem,1)" ng-class="{'glyphvoted':vm.problem.voted==1}"></div>
+				<div style="cursor:default;" title="P: {{vm.problem.votepositive}} N: {{vm.problem.votenegative}}">{{vm.problem.votepositive-vm.problem.votenegative}}</div>
+				<div class="glyphicon glyphicon-menu-down" role="button" ng-click="vm.toggleVote(vm.problem,-1)" ng-class="{'glyphvoted':vm.problem.voted==-1}"></div>
+			</center>
+		</div>
+				
+		<div class="well well-sm pull-left col-md-11">
+			<div class="row col-md-12">
+				<div class="pull-left">
+					<img style="cursor:zoom-in;" ng-src="{{vm.album[0].thumb}}" ng-click="vm.openImg(0)"/>
+				</div>
+				<div class="pull-left margin-l-5">
+					<p class="title">
+						<b>
+						<span ng-if="vm.problem.mark==2">[Solved]</span>
+						<span ng-if="vm.problem.mark==1">[In Progress]</span>
+						</b>
+						{{vm.problem.text}}</p><br />
+					<p>Location: {{vm.problem.address}}</p><br />
+					<p>Category: {{vm.problem.ctgname}}
+					</p>
+						<span ng-if="authenticated" style="cursor:default">
+							<span role="button" class="glyphicon glyphicon-eye-open" ng-show="vm.problem.following" style="color:green;font-size:larger;" 
+								title="Unfollow" ng-click="vm.follow(0)"></span>
+							<span role="button" class="glyphicon glyphicon-eye-close" ng-show="!vm.problem.following" style="font-size:larger;"
+								title="Follow" ng-click="vm.follow(1)"></span> 
+							<span ng-show="vm.problem.cr"> | </span>
+						</span>
+						<div role="button" class="glyphicon glyphicon-ok" style="font-size:larger;color:green;" 
+							title="Mark as: Solved" ng-if="!vm.problem.mark && (role==4 || vm.problem.cr)" ng-click="vm.mark(2);">
+						</div>
+						<div role="button" class="glyphicon glyphicon-time" style="font-size:larger;color:orange;" 
+							title="Mark as: In Progress" ng-if="!vm.problem.mark && (role==4 || vm.problem.cr)" ng-click="vm.mark(1);">
+						</div>
+						<div role="button" class="glyphicon glyphicon-remove" style="font-size:larger;color:red;" 
+							title="Remove mark" ng-if="vm.problem.mark && (role==4 || vm.problem.cr)" ng-click="vm.mark(0);">
+						</div>
+					</p>
+				</div>
+				<div class="pull-right" style="font-size:smaller;"> Submitted by <b>{{vm.problem.username}}</b> on {{vm.problem.created}}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row animated fadeIn" ng-repeat="comment in vm.problem.comments">
+	
+		<div class="col-md-3">
+		</div>
+		
+		<div class="col-md-9 well well-sm">
+			<div class="pull-left">
+				<img style="cursor:zoom-in;" ng-src="{{vm.album[$index+1].thumb}}" ng-click="vm.openImg($index+1)"/>
+			</div>
+			<div class="pull-left margin-l-5">
+			<p>{{comment.text}}</p><br />
+			<p style="font-size:smaller;">Commented by <b>{{comment.username}}</b> on {{comment.created}}</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row animated fadeIn">
+	
+		<div class="col-md-3">
+		</div>
+		
+		<div class="col-md-9 well well-sm">
+		
+			<div class="row col-md-12">
+				<b>Reply:</b><span style="font-size:smaller;"> (required)</span>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-6">
+				<textarea style="height:100px;width:400px;" class="form-control" placeholder="Type your comment here" ng-model="vm.textcomment"></textarea>
+				</div>
+				<div class="col-md-6">
+					Comment image:<span style="font-size:smaller;"> (optional)</span>
+					<br />
+					<input type="file" class="btn" ng-class="{'btn-success':vm.file !== undefined, 'btn-warning':vm.file == undefined}" 
+						ngf-select ng-model="vm.file" name="file" ngf-pattern="'image/*'"
+						ngf-accept="'image/*'" ngf-max-size="9MB" ngf-min-height="100" style="max-width:100%;"/>
+				</div>
+			</div>
+		
+			<div class="row col-md-12">
+				<br />
+				<input class="btn" ng-class="{'btn-success':(vm.textcomment),'btn-warning':(!vm.textcomment)}"
+						type="submit" value="  Submit  " ng-disabled="(!vm.textcomment) || (role<=1) || (!authenticated)" ng-click="vm.submitComment()" ng-if="vm.sent==0" />
+				<span ng-if="vm.sent==1">Uploading...</span><span ng-if="vm.sent==-1">Failed to comment</span><span ng-if="vm.sent==2">Comment sent!</span>
+			</div>
+			
+			
+		</div>
+		
+		
+	</div>
+	
+</div>

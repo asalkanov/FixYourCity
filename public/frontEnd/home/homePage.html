@@ -1,0 +1,238 @@
+<div class="container-fluid animated fadeIn">
+	<div class="row" ng-hide="!vm.showsearch">
+	
+		<div class="col-md-0">
+		</div>
+		
+		<div class="col-md-4">
+			<table class="table">
+				<tr>
+					<th>
+						<h1>City</h1>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" class="form-control" placeholder="Search for city..." ng-model="vm.inputCityName" ng-change="vm.filterCities(vm.inputCityName);">
+					</td>
+				</tr> 
+				<tr class="animated fadeInRight" ng-repeat="city in vm.citiesToShow | limitTo: 5" ng-click="vm.selectCity(city.idcity)" ng-class="{'lightgraybg':vm.selectedcity === city.idcity}" role="button">
+					<td>
+						{{city.cityname}}
+					</td>
+					<td>
+						{{city.state}}
+					</td>
+				</tr>
+				<tr ng-if="!vm.citiesToShow[0]">
+					<td>
+						<b>Can't find your city? <a href="#/suggestCity">Suggest it!</a></b>
+					</td>
+				</tr>
+					<!--<ol class="cities">
+						<li ng-repeat="city in vm.citiesToShow">
+						<a href="#/city/{{city.idcity}}">{{city.cityname}}</a>
+						{{city.state}}
+						</li>
+					</ol>-->
+			</table>
+		</div>
+		
+		<div class="col-md-4">
+		</div>
+		
+		<div class="col-md-4">
+			<table class="table">
+				<tr>
+					<th>
+						<h1>Category</h1>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" class="form-control" placeholder="Search for category..." ng-model="vm.inputCategoryName" ng-change="vm.filterCategories(vm.inputCategoryName);">
+					</td>
+				</tr>
+				<tr class="animated fadeInLeft" ng-repeat="category in vm.categoriesToShow  | limitTo: 5" ng-click="vm.selectCategory(category.idcategory)" ng-class="{'lightgraybg':vm.selectedcategory === category.idcategory}" 
+					role="button">
+					<td>
+						{{ category.ctgname}}
+					</td>
+					<td></td>
+				</tr>
+				<tr ng-if="!vm.categoriesToShow[0]">
+					<td>
+						<b>Can't find appropriate category? <a href="#/suggestCategory">Suggest it!</a></b>
+					</td>
+				</tr>
+					<!--<ol class="categories">
+						<li ng-repeat="category in vm.categoriesToShow">
+						{{ category.ctgname}}
+						</li>
+					</ol>-->
+				
+			</table>
+		</div>
+		
+		<div class="col-md-0">
+		</div>
+		
+	</div>
+	
+	
+	<div class="row">
+	
+	<!--
+		<div class="col-md-4">
+			
+			<input type="text" placeholder="City name here" ng-model="vm.cityname"/>
+			<input type="text" placeholder="State here" ng-model="vm.state"/>
+			<input type="button" value="Add city" ng-click="vm.insertCity()"/>
+			
+		</div> -->
+		<!-- MOVED --
+		<div class="col-md-4">
+			<center>
+			<input type="button" value="Proceed to report" ng-disabled="(!vm.selectedcity || !vm.selectedcategory)"/ ng-click="vm.proceedSubmit(vm.selectedcity,vm.selectedcategory)">
+			</center>
+		</div>
+		
+		<div class="col-md-4">
+		</div>
+		-->
+	</div>
+	<!--
+	<div class="">
+		</div>
+	-->
+	<hr style="padding: 0px; margin: 0px;"/>
+	<div role="button" class="row collapserow animated fadeIn" ng-click="vm.showsearchToggle()">
+	
+		<center>
+			<div class="glyphicon glyphicon-triangle-bottom glyphcollapse" ng-if="!vm.showsearch"></div><div class="glyphicon glyphicon-triangle-top glyphcollapse" ng-if="vm.showsearch"></div>
+		</center>
+	
+	</div>
+	<hr style="padding: 0px; margin-top: 0px;"/>
+	
+	<div class="row animated fadeIn">
+		
+		<div class="col-md-4">
+		</div>
+		
+		<div class="col-md-4">
+			<center>
+			<input role="button" type="submit" class="btn" ng-class="{'btn-warning':(!vm.selectedcity || !vm.selectedcategory), 'btn-success':(vm.selectedcity && vm.selectedcategory)}" 
+				value="Proceed to report" ng-disabled="(!vm.selectedcity || !vm.selectedcategory)"/ ng-click="vm.proceedSubmit(vm.selectedcity,vm.selectedcategory)">
+			</center>
+		</div>
+		
+		<div class="col-md-4">
+		</div>
+		
+	</div>
+	<hr />
+	
+	<!-- SORT -->
+	<div class="row">
+		<div class="col-md-1">
+		</div>
+		<div class="col-md-10">
+			<!-- bootstrap dropdown doesn't work (firefox issue?)
+			<div class="container">
+			<div class="dropdown">
+				
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+					<span class="caret"></span></button>
+				
+				<ul class="dropdown-menu">
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">JavaScript</a></li>
+				</ul>
+			</div>
+			</div>
+			-->
+			<div class="row animated fadeIn" ng-if="vm.selectedcity">  <!-- only show if the necessary requirement is selected -->
+				<b>Sort by:</b>
+				<select>
+					<option ng-click="vm.sort('lastactivity')" selected>Last activity</option>
+					<option ng-click="vm.sort('created')">Submit date</option>
+					<option ng-click="vm.sort('votepositive - votenegative')">Vote score</option>
+					<option ng-click="vm.sort('votepositive + votenegative')">Num. votes</option>
+					<option style="background-color:lightsalmon;" ng-click="vm.sort('1')">In progress</option>
+					<option style="background-color:lightgreen;" ng-click="vm.sort('2')">Solved</option>
+				</select>
+				
+				<!-- reverse -->
+				<div role="button" class="glyphicon glyphicon-sort-by-attributes" ng-click="vm.reverse=!vm.reverse" ng-if="!vm.reverse"></div>
+				<div role="button" class="glyphicon glyphicon-sort-by-attributes-alt" ng-click="vm.reverse=!vm.reverse" ng-if="vm.reverse"></div>
+				
+			</div>
+		</div>
+		<div class="col-md-1">
+		</div>
+	</div>
+	<br />	
+	<div class="row">
+	
+		<div class="col-md-1">
+		</div>
+		
+		<div class="col-md-10">
+			<div class="row animated fadeIn" ng-if="!vm.problems[0] && vm.selectedcity && vm.notfound">
+				<h2 align="center">No problems to show.</h2>
+			</div>
+			<div class="row animated fadeIn" ng-repeat="problem in vm.problems | orderBy: vm.sortpick : vm.reverse" 
+					ng-hide="(vm.marksort==0 && problem.mark) || (vm.marksort==2 && problem.mark!=2) || (vm.marksort==1 && problem.mark!=1)">
+				<div class="well well-sm pull-left col-md-1">
+					<center>
+					<div class="glyphicon glyphicon-menu-up" role="button" ng-click="vm.toggleVote(problem,1)" ng-class="{'glyphvoted':problem.voted==1}"></div>
+					<div style="cursor:default;" title="P: {{problem.votepositive}} N: {{problem.votenegative}}">{{problem.votepositive-problem.votenegative}}</div>
+					<div class="glyphicon glyphicon-menu-down" role="button" ng-click="vm.toggleVote(problem,-1)" ng-class="{'glyphvoted':problem.voted==-1}"></div>
+					</center>
+				</div>
+				
+				<div class="well well-sm pull-left col-md-11">
+					<div class="pull-left">
+						<img style="cursor:zoom-in;" ng-src="{{problem.thumb}}" ng-click="vm.openImg(problem.idproblem)"/>
+					</div>
+					<div class="pull-left margin-l-5">
+						<p class="title">
+							<b>
+							<span ng-if="problem.mark==2">[Solved]</span>
+							<span ng-if="problem.mark==1">[In Progress]</span>
+							</b>
+							<a href="#/problem/{{problem.idproblem}}">   
+							{{problem.text}}
+							</a>
+						</p>
+						<p>Location: {{problem.address}}</p>
+						<p>Category: {{problem.ctgname}}</p><br />
+						<p>
+							<h6>
+							<span ng-if="authenticated" style="cursor:default">
+								<span role="button" class="glyphicon glyphicon-eye-open" ng-if="problem.following" style="color:green;font-size:larger;" 
+									title="Unfollow" ng-click="vm.follow(problem, 0)"></span>
+								<span role="button" class="glyphicon glyphicon-eye-close" ng-if="!problem.following" style="font-size:larger;" 
+									title="Follow"ng-click="vm.follow(problem, 1)"></span>
+							 | 
+							</span>
+							<a href="#/problem/{{problem.idproblem}}">{{problem.comments}} comments</a>
+							</h6>
+						</p>
+					</div>
+					<div class="pull-right" style="font-size:smaller;">
+					<p>Submitted by <b>{{problem.username}}</b> on {{problem.created}}<p>
+					</div>
+				</div>
+			
+			</div>
+			
+		</div>
+		
+		<div class="col-md-1">
+		</div>
+	
+	</div>
+</div>
